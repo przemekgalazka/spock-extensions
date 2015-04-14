@@ -2,18 +2,26 @@ apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'maven'
 apply plugin: 'signing'
+apply plugin: 'pl.allegro.tech.build.axion-release'
 
-ext {
-
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'pl.allegro.tech.build', name: 'axion-release-plugin', version: '1.2.3'
+    }
 }
 
-repositories {
-    mavenCentral()
+scmVersion {
+    tag {
+        prefix = 'spock-extensions'
+    }
 }
 
 group = "com.geodevv.testing"
 archivesBaseName = "spock-extensions"
-version = "1.0.0-SNAPSHOT"
+version = scmVersion.version
 
 dependencies {
     // The production code uses the SLF4J logging API at compile time
@@ -33,6 +41,9 @@ test {
 ///////////////////////////////////////////
 // snapshots & release deployment
 //////////////////////////////////////////
+
+
+
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
     from javadoc
@@ -97,4 +108,7 @@ uploadArchives {
         }
     }
 }
+
+
+
 
