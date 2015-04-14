@@ -1,16 +1,5 @@
-apply plugin: 'java'
-apply plugin: 'groovy'
-apply plugin: 'maven'
-apply plugin: 'signing'
-apply plugin: 'pl.allegro.tech.build.axion-release'
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'pl.allegro.tech.build', name: 'axion-release-plugin', version: '1.2.3'
-    }
+plugins {
+    id 'pl.allegro.tech.build.axion-release' version '1.2.3'
 }
 
 scmVersion {
@@ -19,6 +8,21 @@ scmVersion {
     }
 }
 
+ext {
+
+}
+
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+
+project.version = scmVersion.version
 group = "com.geodevv.testing"
 archivesBaseName = "spock-extensions"
 version = scmVersion.version
