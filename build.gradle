@@ -1,5 +1,12 @@
 apply plugin: 'java'
 apply plugin: 'groovy'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+group = "com.geodevv.testing"
+archivesBaseName = "spock-extensions"
+version = "1.0.0-SNAPSHOT"
+
 
 repositories {
     mavenCentral()
@@ -18,5 +25,70 @@ dependencies {
 
 test {
     include '**/*Spec.*'
+}
+
+///////////////////////////////////////////
+// snapshots & release deployment
+//////////////////////////////////////////
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'geodevv spock extensions'
+                packaging 'jar'
+                // optionally artifactId can be defined here
+                description 'spock extensions like doomsday'
+
+                scm {
+                    connection 'git@github.com:przemekgalazka/spock-extensions.git'
+                    developerConnection 'git@github.com:przemekgalazka/spock-extensions.git'
+                    url 'https://github.com/przemekgalazka/spock-extensions'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'przemekgalazka'
+                        name 'Przemek Galazka'
+                        email 'przemek.galazka@gmail.com'
+                    }
+                }
+            }
+        }
+    }
 }
 
