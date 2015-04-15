@@ -3,16 +3,15 @@ plugins {
 }
 
 scmVersion {
+    createReleaseCommit = true
     tag {
         prefix = 'spock-extensions'
     }
 }
 
-ext {
-
-}
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -20,7 +19,7 @@ apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'maven'
 apply plugin: 'signing'
-
+apply plugin: 'maven-publish'
 
 project.version = scmVersion.version
 group = "com.geodevv.testing"
@@ -45,7 +44,10 @@ test {
 ///////////////////////////////////////////
 // snapshots & release deployment
 //////////////////////////////////////////
-
+//nexusStaging {
+//    packageGroup = "com.geodevv"
+//    stagingProfileId = 'a27938c916b08a'
+//}
 
 
 task javadocJar(type: Jar) {
@@ -59,7 +61,7 @@ task sourcesJar(type: Jar) {
 }
 
 artifacts {
-    archives javadocJar, sourcesJar
+    archives jar, javadocJar, sourcesJar
 }
 
 signing {
@@ -87,7 +89,7 @@ uploadArchives {
                 packaging 'jar'
                 // optionally artifactId can be defined here
                 description 'spock extensions like doomsday'
-
+                url 'http://spock-extensions.geodevv.com`'
                 scm {
                     connection 'git@github.com:przemekgalazka/spock-extensions.git'
                     developerConnection 'git@github.com:przemekgalazka/spock-extensions.git'
@@ -105,13 +107,34 @@ uploadArchives {
                     developer {
                         id 'przemekgalazka'
                         name 'Przemek Galazka'
-                        email 'przemek.galazka@gmail.com'
+                        email 'przemek DOTa galazka Monceey gmail dut com'
                     }
                 }
             }
         }
     }
 }
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+            pom.withXml {
+                //#89 - workaround to not to have only runtime dependencies in generated pom.xml
+                //Known limitation in maven-publish - - http://forums.gradle.org/gradle/topics/maven_publish_plugin_generated_pom_making_dependency_scope_runtime#reply_14120711
+                asNode().dependencies.'*'.findAll() {
+                    it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
+                        dep.name == it.artifactId.text()
+                    }
+                }.each() {
+                    it.scope*.value = 'compile'
+                }
+            }
+        }
+    }
+}
+
+uploadArchives.dependsOn { check }
 
 
 
