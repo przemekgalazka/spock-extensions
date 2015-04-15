@@ -17,11 +17,13 @@ Add annotation *@DoomsDay('yyyy-MM-dd')* to your feature or specification.
 From now on, a feature or specification will be ignored till 'yyyy-MM-dd'
 
 ##Maven
+```xml
  <dependency>
   <groupId>com.geodevv.testing</groupId>
   <artifactId>spock-extensions</artifactId>
   <version>1.0.2</version>
 </dependency>
+```
 
 ##Dependencies
     compile 'org.codehaus.groovy:groovy-all:2.4.3'
