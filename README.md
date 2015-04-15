@@ -7,7 +7,7 @@ Spock extension - doomsday, it helps ignore failling feature till specific date 
     @DoomsDay('2018-06-30')
     def "TC-1111 - It's not possible to refresh access token when.."() {
 
-        given: 'user logs in obtaining PayU app access token' 
+        given: 'user logs in obtaining app access token' 
         ...
         ... 
 
