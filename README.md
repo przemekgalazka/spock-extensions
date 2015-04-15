@@ -5,7 +5,7 @@ Spock extension - doomsday, it helps ignore failling feature till specific date 
 ## Examples
 
     @DoomsDay('2018-06-30')
-    def "TC-1111 - It's not possible to refresh access when.."() {
+    def "TC-1111 - It's not possible to refresh access token when.."() {
 
         given: 'user logs in obtaining PayU app access token' 
         ...
@@ -25,7 +25,10 @@ From now on, a feature or specification will be ignored till 'yyyy-MM-dd'
 
 
 ##Dependencies
-* Spock 1.0
+    compile 'org.codehaus.groovy:groovy-all:2.4.3'
+    compile 'org.spockframework:spock-core:1.0-groovy-2.4'
+    compile 'org.slf4j:slf4j-api:1.7.7'
+    compile 'joda-time:joda-time:2.7'
 
 
 ##Latest Release
